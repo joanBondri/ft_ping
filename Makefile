@@ -3,6 +3,7 @@ CFLAGS = -Wall -Werror -Wextra  -I./includes -I./src/libft
 
 SRC = src/main.c src/helpOptions.c \
 		src/parser.c \
+		src/creationEchoRequest.c \
 
 EXECUTABLE = ft_ping
 LIBFTF = ./src/libft
