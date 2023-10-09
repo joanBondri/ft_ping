@@ -20,6 +20,6 @@ typedef struct  s_icmpPacket{
     char data[DATA_SIZE];
 }               t_icmpPacket;
 
-int creationOfRequest(const char* host);
+int creationOfRequest(const char* host, bool isverbose);
 
 #endif

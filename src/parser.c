@@ -5,7 +5,7 @@
 
 void helpMessageError(void)
 {
-	fprintf(stderr, "Try 'ping --help' or 'ping --usage' for more information.\n");
+	fprintf(stderr, "Try 'ft_ping --help' or 'ft_ping --usage' for more information.\n");
 	return ;
 }
 
@@ -19,7 +19,7 @@ int optionsPing(parsedData_t* setup, char* str)
 		setup->verbose = true;
 	else if (ft_strncmp(str, "--", ft_strlen(str)))
 	{
-		fprintf(stderr, "ping: unrecognized option '%s'\n", str);
+		fprintf(stderr, "ft_ping: unrecognized option '%s'\n", str);
 		helpMessageError();
 		return (-1);
 	}
@@ -45,7 +45,7 @@ int optPing(parsedData_t* setup, char* str)
 		}
 		else
 		{
-			fprintf(stderr, "ping: invalid option -- '%c'\n", str[i]);
+			fprintf(stderr, "ft_ping: invalid option -- '%c'\n", str[i]);
 			helpMessageError();
 			return (-1);
 		}
@@ -57,6 +57,13 @@ int optPing(parsedData_t* setup, char* str)
 void parseInputPing(char **argv, parsedData_t* setup)
 {
 	int res = 0;
+	if (argv[1] == NULL)
+	{
+		fprintf(stderr, "ft_ping: missing host operand\n");
+		helpMessageError();
+		exit(64);
+
+	}
 	for (char* str = *++argv; str != NULL; str = *++argv)
 	{
 		if (!ft_strncmp(str, "--", 2))
@@ -69,7 +76,6 @@ void parseInputPing(char **argv, parsedData_t* setup)
 		}
 		else if (!(res = ft_strncmp(str, "-", 1)))
 		{
-			printf("drgdfdfgdfg\n");
 			if (optPing(setup, str) == -1)
 			{
 				ft_lstclear(&(setup->domains), nullfunc);

@@ -6,7 +6,7 @@
 void usageOptionMessage(void)
 {
 	const char str[] = "\
-Usage: ping [-v?] [--verbose] [--help] [--usage]\n\
+Usage: ft_ping [-v?] [--verbose] [--help] [--usage]\n\
             HOST ...";
 	printf("%s\n", str);
 	return ;
@@ -15,7 +15,7 @@ Usage: ping [-v?] [--verbose] [--help] [--usage]\n\
 void helpOptionMessage(void)
 {
 	const char str[] = "\
-Usage: ping [OPTION...] HOST ...\n\
+Usage: ft_ping [OPTION...] HOST ...\n\
 Send ICMP ECHO_REQUEST packets to network hosts.\n\
 \n\
 Options valid for all request types:\n\

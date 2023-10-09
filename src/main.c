@@ -13,12 +13,11 @@ int main (int argc, char **argv)
 
     for (t_list *one = setup.domains; one != NULL; one = one->next)
     {
-        if (creationOfRequest((const char*)one->content))
+        if (creationOfRequest((const char*)one->content, setup.verbose))
         {
             ft_lstclear(&(setup.domains), nullfunc);
             exit(1);
         }
     }
-
 	return (0);
 }
