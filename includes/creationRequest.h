@@ -13,6 +13,18 @@
 # include <unistd.h>
 # include <arpa/inet.h>
 # include <netinet/ip_icmp.h>
+# include <sys/time.h>
+# include <signal.h>
+# include <math.h>
+# include "parser.h"
+
+struct icmphdr {
+    unsigned char type;
+    unsigned char code;
+    unsigned short checksum;
+    unsigned short id;
+    unsigned short seq;
+};
 
 
 typedef struct  s_icmpPacket{
@@ -20,6 +32,16 @@ typedef struct  s_icmpPacket{
     char data[DATA_SIZE];
 }               t_icmpPacket;
 
-int creationOfRequest(const char* host, bool isverbose);
+typedef struct	s_recapPing{
+	char		hostname[1024];
+	uint32_t	totalPacket;
+	uint32_t	totalReceive;
+	double		min;
+	double		max;
+	double		mean;
+	double		stddev;
+}				t_recapPing;
+
+int creationOfRequest(const char* host, parsedData_t setup);
 
 #endif
