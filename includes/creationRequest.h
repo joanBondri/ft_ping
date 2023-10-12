@@ -42,6 +42,8 @@ typedef struct	s_recapPing{
 	double		stddev;
 }				t_recapPing;
 
+enum stateTimeout{STATENORMAL, STATEFLOOD, STATELOAD};
+
 int creationOfRequest(const char* host, parsedData_t setup);
 
 #endif

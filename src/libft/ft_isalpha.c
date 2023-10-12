@@ -18,3 +18,18 @@ int
 	return ((c >= 'A' && c <= 'Z') ||
 			(c >= 'a' && c <= 'z'));
 }
+
+int
+	ft_isalphasup(int c)
+{
+	return ((c >= 'A' && c <= 'Z'));
+}
+
+
+int
+	ft_ishex(int c)
+{
+	return ((c >= 'A' && c <= 'F') ||
+			(c >= 'a' && c <= 'f') ||
+			ft_isdigit(c));
+}

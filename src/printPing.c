@@ -38,11 +38,11 @@ void printRecvLine(int reception, struct msghdr msg, struct timeval start, struc
 
 void printRecapByHostname(t_recapPing recap)
 {
-	int	percent;
+	float	percent;
 
-	percent =(recap.totalPacket - recap.totalReceive)/ recap.totalPacket * 100;
+	percent = 1.0 - recap.totalReceive/ recap.totalPacket * 100.0;
 	printf("--- %s ft_ping statistics ---\n", recap.hostname);
-	printf("%d packets transmitted, %d packets received, %d%% packet loss\n", recap.totalPacket, recap.totalReceive, percent);
+	printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", recap.totalPacket, recap.totalReceive, percent);
 	if (recap.totalReceive == 0)
 		return ;
 	printf("round-trip min/avg/max/stddev = %.3f/%.3f/%.3f/%.3f ms\n", recap.min, recap.mean, recap.max, recap.stddev);

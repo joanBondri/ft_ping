@@ -79,15 +79,17 @@ void handleSignal(int yop)
 	keeprunning = false;
 }
 
-int setupFlood(int sockfd, bool flood)
+int setupFlood(int sockfd, int state, struct timeval *timeout)
 {
-    struct timeval      timeout;
-    if (flood)
-        timeout.tv_sec = 0;
+    if (state != STATENORMAL)
+        timeout->tv_sec = 0;
     else
-        timeout.tv_sec = 3;
-    timeout.tv_usec = 30000;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) == -1)
+        timeout->tv_sec = 3;
+    if(state == STATELOAD)
+        timeout->tv_usec = 1000;
+    else
+        timeout->tv_usec = 30000;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, timeout, sizeof(*timeout)) == -1)
     {
         perror("setsockopt");
         close(sockfd);
@@ -143,11 +145,13 @@ void handleSendingsAndReceive(int sockfd, struct sockaddr_in  target, parsedData
 {
 	t_recapPing			recap = {0};
     int seq = 0;
+    struct timeval      timeout;
+
 
     ft_strlcpy(recap.hostname, hostname, 1024);
     if (setup.load)
     {
-        setupFlood(sockfd, true);
+        setupFlood(sockfd, STATELOAD, &timeout);
         for (; setup.load-- ; seq++)
         {
             struct timeval start;
@@ -158,8 +162,8 @@ void handleSendingsAndReceive(int sockfd, struct sockaddr_in  target, parsedData
                 printFlood(recap.totalPacket - recap.totalReceive);
             if (!keeprunning)
                 break;
-            printf("load = %d\n", setup.load);
         }
+        setupFlood(sockfd, (setup.flood) ? STATEFLOOD : STATENORMAL , &timeout);
     }
 	for (; true ; seq++)
 	{
@@ -181,6 +185,8 @@ int creationOfRequest(const char* host, parsedData_t setup) {
     int                 sockfd;
     int                 status;
     char                buffer[1024];
+    struct timeval      timeout;
+
     sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0)
     {
@@ -193,7 +199,7 @@ int creationOfRequest(const char* host, parsedData_t setup) {
         close(sockfd);
         return (1);
     }
-    if (setupFlood(sockfd, setup.flood))
+    if (setupFlood(sockfd, setup.flood, &timeout))
         return (1);
     status = creationOfDestinationByHostname(host, &result, (setup.verbose) ? getpid() : -1, buffer);
     if (status)
