@@ -9,6 +9,15 @@ typedef struct	parsedData_s {
 	enum helpoptEnum	help;
 	bool				verbose;
 	t_list*				domains;
+	bool				flood;
+	int					load;
+	bool				numeric;
+	uint				waiting;
+	uint				waitingW;
+	bool				restrictedRouting;
+	char				pad[16];
+	size_t				sizeData;
+	uint				ttl;
 }				parsedData_t;
 
 

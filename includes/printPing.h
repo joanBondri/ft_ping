@@ -6,6 +6,6 @@ void printFirstlinePing(const char* localhost, const char* ip, const int id);
 void printRecvLine(int reception, struct msghdr msg, struct timeval start, struct timeval end);
 void printRecapByHostname(t_recapPing recap);
 double getDelay( struct timeval start, struct timeval end);
-
+void    printFlood(int number);
 
 #endif

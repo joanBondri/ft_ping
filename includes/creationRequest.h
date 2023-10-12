@@ -18,7 +18,7 @@
 # include <math.h>
 # include "parser.h"
 
-struct icmphdr {
+struct icmpheadr {
     unsigned char type;
     unsigned char code;
     unsigned short checksum;
@@ -28,7 +28,7 @@ struct icmphdr {
 
 
 typedef struct  s_icmpPacket{
-    struct icmphdr icmp_header;
+    struct icmpheadr icmp_header;
     char data[DATA_SIZE];
 }               t_icmpPacket;
 

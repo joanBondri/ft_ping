@@ -4,6 +4,7 @@ CFLAGS = -Wall -Werror -Wextra  -I./includes -I./src/libft
 SRC = src/main.c src/helpOptions.c \
 		src/parser.c \
 		src/creationEchoRequest.c \
+		src/printPing.c \
 
 EXECUTABLE = ft_ping
 LIBFTF = ./src/libft
@@ -15,7 +16,7 @@ all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
 	@make -C $(LIBFTF)
-	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LDFLAGS) $(LIBFT)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LDFLAGS) -lm $(LIBFT)
 	sudo setcap cap_net_raw+eip ./$(EXECUTABLE)
 
 %.o: %.c
