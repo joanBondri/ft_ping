@@ -75,8 +75,8 @@ void setupReception (struct  msghdr* msg,struct iovec* iov, char* buffer, size_t
 
 void handleSignal(int yop)
 {
-	(void)yop;
-	keeprunning = false;
+	if (yop == SIGINT || yop == SIGALRM)
+		keeprunning = false;
 }
 
 int setupFlood(int sockfd, int state, struct timeval *timeout)
@@ -105,13 +105,14 @@ int recvreply (int sockfd, parsedData_t setup, t_recapPing* recap,  struct timev
     char    buffer[1024];
 	setupReception(&msg, &iov, buffer, sizeof(buffer));
     ssize_t bytes_received = recvmsg(sockfd, &msg, 0);
+	printf("suze = %ld\n", bytes_received);
     if (bytes_received < 0)
     {
         return (1);
     }
 	recap->totalReceive++;
 	gettimeofday(end, NULL);
-	if (!setup.flood)
+	(void)setup;
         printRecvLine(bytes_received, msg, *start, *end);
 	double delay = getDelay(*start, *end);
 	double sum = recap->stddev * recap->stddev * recap->totalReceive;
@@ -145,26 +146,26 @@ void handleSendingsAndReceive(int sockfd, struct sockaddr_in  target, parsedData
 {
 	t_recapPing			recap = {0};
     int seq = 0;
-    struct timeval      timeout;
+    // struct timeval      timeout;
 
 
     ft_strlcpy(recap.hostname, hostname, 1024);
-    if (setup.load)
-    {
-        setupFlood(sockfd, STATELOAD, &timeout);
-        for (; setup.load-- ; seq++)
-        {
-            struct timeval start;
-            struct timeval end;
-            sendingRequest(sockfd, target, seq, &recap, setup, &start);
-            recvreply(sockfd, setup, &recap, &start, &end, true);
-            if (setup.flood)
-                printFlood(recap.totalPacket - recap.totalReceive);
-            if (!keeprunning)
-                break;
-        }
-        setupFlood(sockfd, (setup.flood) ? STATEFLOOD : STATENORMAL , &timeout);
-    }
+    // if (setup.load != 0)
+    // {
+    //     setupFlood(sockfd, STATELOAD, &timeout);
+    //     for (; setup.load-- > 0 ; seq++)
+    //     {
+    //         struct timeval start;
+    //         struct timeval end;
+    //         sendingRequest(sockfd, target, seq, &recap, setup, &start);
+    //         recvreply(sockfd, setup, &recap, &start, &end, true);
+    //         if (setup.flood)
+    //             printFlood(recap.totalPacket - recap.totalReceive);
+    //         if (!keeprunning)
+    //             break;
+    //     }
+    //     setupFlood(sockfd, (setup.flood) ? STATEFLOOD : STATENORMAL , &timeout);
+    // }
 	for (; true ; seq++)
 	{
         struct timeval start;
@@ -187,7 +188,11 @@ int creationOfRequest(const char* host, parsedData_t setup) {
     char                buffer[1024];
     struct timeval      timeout;
 
-    sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+	// if (setup.waiting)
+	// {
+	// 	signal(SIGALRM, handleSignal);
+	// }
+	sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (sockfd < 0)
     {
         perror("socket");
@@ -199,7 +204,7 @@ int creationOfRequest(const char* host, parsedData_t setup) {
         close(sockfd);
         return (1);
     }
-    if (setupFlood(sockfd, setup.flood, &timeout))
+    if (setupFlood(sockfd, NONE, &timeout))
         return (1);
     status = creationOfDestinationByHostname(host, &result, (setup.verbose) ? getpid() : -1, buffer);
     if (status)
@@ -211,6 +216,8 @@ int creationOfRequest(const char* host, parsedData_t setup) {
     target.sin_family = AF_INET;
     target.sin_addr = ((struct sockaddr_in *)((result)->ai_addr))->sin_addr;
 	signal(SIGINT, handleSignal);
+	// if (setup.waiting)
+	// 	alarm(setup.waiting);
     handleSendingsAndReceive(sockfd, target,setup, buffer);
     close(sockfd);
     freeaddrinfo(result);

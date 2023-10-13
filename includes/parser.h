@@ -2,6 +2,7 @@
 # define PARSER_H
 # include <stdbool.h>
 # include "libft.h"
+# include <limits.h>
 # define VERBOSE 'v'
 # define FLOOD 'f'
 # define LOAD 'l'
@@ -17,17 +18,17 @@ enum helpoptEnum {NONE, HELP, USAGE};
 
 typedef struct	parsedData_s {
 	enum helpoptEnum	help;
-	bool				verbose;
 	t_list*				domains;
+	bool				verbose;
 	bool				flood;
-	int					load;
 	bool				numeric;
-	uint				waiting;
-	uint				waitingW;
 	bool				restrictedRouting;
+	long				load;
+	unsigned int		waiting;
+	long				waitingW;
+	long				ttl;
 	short				pad;
 	size_t				sizeData;
-	int					ttl;
 }				parsedData_t;
 
 

@@ -17,7 +17,6 @@ all: $(EXECUTABLE)
 $(EXECUTABLE): $(OBJ)
 	@make -C $(LIBFTF)
 	$(CC) $(CFLAGS) -o $@ $(OBJ) $(LDFLAGS) -lm $(LIBFT)
-	sudo setcap cap_net_raw+eip ./$(EXECUTABLE)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
