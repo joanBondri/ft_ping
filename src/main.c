@@ -13,7 +13,7 @@ void printParsedData(parsedData_t data) {
     printf("restrictedRouting: %d\n", data.restrictedRouting);
     printf("pad: %d\n", data.pad);
     printf("sizeData: %zu\n", data.sizeData);
-    printf("ttl: %ld\n", data.ttl);
+    printf("ttl: %d\n", data.ttl);
 }
 
 

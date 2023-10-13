@@ -18,6 +18,16 @@ double getDelay( struct timeval start, struct timeval end)
 	return (double)(end.tv_sec - start.tv_sec) * 1000.0 + (double)(end.tv_usec - start.tv_usec) / 1000.0;
 }
 
+void printTTLLine(int reception, struct msghdr msg)
+{
+	char 			source_ip[INET_ADDRSTRLEN];
+	struct ip*		ip_header;
+	
+	ip_header = (struct ip *)msg.msg_iov[0].iov_base;
+	inet_ntop(AF_INET, &(ip_header->ip_src), source_ip, INET_ADDRSTRLEN);
+	printf("%d bytes from %s: Time to live exceeded\n", reception, source_ip);
+}
+
 void printRecvLine(int reception, struct msghdr msg, struct timeval start, struct timeval end)
 {
 	struct ip*		ip_header;
@@ -40,7 +50,7 @@ void printRecapByHostname(t_recapPing recap)
 {
 	float	percent;
 
-	percent = 1.0 - recap.totalReceive/ recap.totalPacket * 100.0;
+	percent =( 1.0 - ((recap.totalReceive * 1.0)/ (recap.totalPacket * 1.0)) )* 100.0;
 	printf("--- %s ft_ping statistics ---\n", recap.hostname);
 	printf("%d packets transmitted, %d packets received, %.0f%% packet loss\n", recap.totalPacket, recap.totalReceive, percent);
 	if (recap.totalReceive == 0)

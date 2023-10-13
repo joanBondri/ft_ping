@@ -7,5 +7,7 @@ void printRecvLine(int reception, struct msghdr msg, struct timeval start, struc
 void printRecapByHostname(t_recapPing recap);
 double getDelay( struct timeval start, struct timeval end);
 void    printFlood(int number);
+void printTTLLine(int reception, struct msghdr msg);
+
 
 #endif

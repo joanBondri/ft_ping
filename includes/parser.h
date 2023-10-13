@@ -3,6 +3,9 @@
 # include <stdbool.h>
 # include "libft.h"
 # include <limits.h>
+# ifndef ICMP_TIME_EXCEEDED
+#  define ICMP_TIME_EXCEEDED 11
+# endif
 # define VERBOSE 'v'
 # define FLOOD 'f'
 # define LOAD 'l'
@@ -26,7 +29,7 @@ typedef struct	parsedData_s {
 	long				load;
 	unsigned int		waiting;
 	long				waitingW;
-	long				ttl;
+	int					ttl;
 	short				pad;
 	size_t				sizeData;
 }				parsedData_t;
